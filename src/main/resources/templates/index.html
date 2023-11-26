@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div id="wallet_container"></div>
+    <script>
+        const mp = new MercadoPago('APP_USR-7ed6c862-3b0c-45ca-b358-6889c7add51a');
+
+        fetch("http://localhost:8080/create_preference",{
+            method : "POST"
+        })
+        .then(function (response) {
+            console.log(response);
+            return response.json(response);
+        })
+        .then(function (preference) {
+            console.log("preference")
+            console.log("preference", preference);
+            createCheckoutButton(preference.id);
+
+            $(".shopping-cart").fadeOut(500);
+            setTimeout(() => {
+                $(".container_payment").show(500).fadeIn();
+            }, 500);
+        })
+        .catch(function (error) {
+            console.error("Error:", error);
+            alert("Unexpected error:");
+            $('#wallet_container').attr("disabled", false);
+        });
+
+        function createCheckoutButton(preferenceId) {
+            const bricksBuilder = mp.bricks();
+
+            const renderComponent = async (bricksBuilder) => {
+                if(window.checkoutButton) window.checkoutButton.unmount();
+                    await bricksBuilder.create(
+                        'wallet',
+                        'wallet_container',
+                    {
+                        initialization: {
+                            preferenceId: preferenceId,
+                            redirectMode: "blank"
+                        },
+                        callbacks: {
+                            onError: (error) => console.error(error),
+                            onReady: () => {}
+                        }
+                    }
+                );
+            };
+            window.checkoutButton =  renderComponent(bricksBuilder);
+        }
+
+        
+        /*mp.bricks().create("wallet", "wallet_container", {
+            initialization: {
+                preferenceId: "wallet_container",
+                redirectMode: "modal"
+            }
+        })*/
+  </script>
+</body>
+</html>

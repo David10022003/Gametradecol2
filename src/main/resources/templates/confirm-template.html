@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es">
+    <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <h2>Confirmar correo electrónico</h2>
+        <h3><span>Hola </span><span th:text="${userName}"></span></h3>
+        <h4>Haz click en el siguiente botón para confirmar su correo electrónico y así poder ingresar a su cuenta de GameTradeCol.</h4>
+        <a th:href="@{${url}}"><button>Confirmar correo</button></a>
+    </body>
+</html>
